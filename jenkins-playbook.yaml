@@ -1,0 +1,12 @@
+---
+- hosts: all
+  become: true
+
+  vars_files:
+    - vars.yaml
+
+  tasks:
+    - name: Upgrade all packages
+      ansible.builtin.yum:
+        name: '*'
+        state: latest
