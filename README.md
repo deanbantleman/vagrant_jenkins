@@ -18,7 +18,18 @@ Ansible needs to be installed on the Ubuntu host.
    sudo add-apt-repository --yes --update ppa:ansible/ansible
    sudo apt install ansible
    ```
-3) 
+# Running the code
+
+1) Change directory into the Vagrant project directory:
+
+   ```
+   cd /mnt/c/Users/dean0978/projects
+   ```
+2) Clone this repository:
+
+   ```
+   git clone
+   ```
 
    
 
