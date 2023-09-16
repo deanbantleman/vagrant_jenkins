@@ -20,16 +20,36 @@ Ansible needs to be installed on the Ubuntu host.
    ```
 # Running the code
 
-1) Change directory into the Vagrant project directory:
+1) Change directory into the Vagrant project directory, replacing %username% with your windows username:
 
    ```
-   cd /mnt/c/Users/dean0978/projects
+   cd /mnt/c/Users/%username%/projects
    ```
 2) Clone this repository:
 
    ```
-   git clone
+   git clone git@github.com:deanbantleman/vagrant_jenkins.git
    ```
+
+3) Change directory into the code directory:
+
+   ```
+   cd vagrant_jenkins
+   ```
+
+4) Run Vagrant:
+
+   ```
+   vagrant up
+   ```
+
+# Re-run provisioning
+
+If your instance is already running or you need to re-run your ansible code you can run the command:
+
+```
+vagrant provision
+```
 
    
 
