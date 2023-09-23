@@ -83,7 +83,7 @@ Vagrant.configure("2") do |config|
 
   # Run Ansible Playbook
   config.vm.provision "ansible_local" do |ansible|
-    ansible.verbose = "v"
+    # ansible.verbose = "v"
     ansible.playbook="jenkins-playbook.yaml"
   end
 end

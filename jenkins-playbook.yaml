@@ -47,3 +47,8 @@
       ansible.builtin.shell:
         cmd: cat /var/lib/jenkins/secrets/initialAdminPassword
       register: readoutput
+    
+    - name: Print Jenkins Password
+      debug:
+        msg: "Jenkins Password: {{ readoutput.stdout }}"
+      
