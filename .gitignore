@@ -1,2 +1,4 @@
 # Ignore .vagrant folder
 .vagrant
+awscliv2.zip
+/aws
