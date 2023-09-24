@@ -43,12 +43,22 @@
           enabled: yes
       register: start
 
-    - name: Get Jenkins Initial Password - Read File
-      ansible.builtin.shell:
-        cmd: cat /var/lib/jenkins/secrets/initialAdminPassword
-      register: readoutput
+    # - name: Get Jenkins Initial Password - Read File
+    #   ansible.builtin.shell:
+    #     cmd: cat /var/lib/jenkins/secrets/initialAdminPassword
+    #   register: readoutput
     
-    - name: Print Jenkins Password
-      debug:
-        msg: "Jenkins Password: {{ readoutput.stdout }}"
+    # - name: Print Jenkins Password
+    #   debug:
+    #     msg: "Jenkins Password: {{ readoutput.stdout }}"
+
+    - name: Install UnZip
+      ansible.builtin.yum:
+        name: unzip
+        state: latest
       
+    - name: Install AWS Cli 2
+      ansible.builtin.shell: |
+        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+        unzip awscliv2.zip
+        sudo ./aws/install
