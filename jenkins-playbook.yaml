@@ -6,10 +6,10 @@
     - vars.yaml
 
   tasks:
-    - name: Upgrade all packages
-      ansible.builtin.yum:
-        name: '*'
-        state: latest
+    # - name: Upgrade all packages
+    #   ansible.builtin.yum:
+    #     name: '*'
+    #     state: latest
     
     - name: Update ca-certificates
       yum:
@@ -27,13 +27,16 @@
         baseurl: "https://pkg.jenkins.io/redhat-stable/"
         description: "Jenkins from Yum repo"
 
-    - name: Install Java and Jenkins
+    - name: Install Java, Jenkins, python3 and git
       yum:
           name: "{{ item }}"
           state: present
       loop:
           - "java-11-openjdk-devel"
           - "jenkins"
+          - "git"
+          - "python3"
+          - "python3-pip"
       register: install
 
     - name: Starting Jenkins Service
@@ -42,6 +45,19 @@
           state: started
           enabled: yes
       register: start
+
+    - name: Check if jenkins initialAdminPassword exists
+      ansible.builtin.stat:
+        path: "{{ jenkins_initialAdminPassword_path }}"
+      register: jenkins_passwordfile_to_check
+  
+    - name: Display if the JenkinWS password file was found
+      # ansible.builtin.debug:
+      #   msg: "Directory {{ jenkins_initialAdminPassword_path }} present"
+      ansible.builtin.shell:
+        cmd: cat /var/lib/jenkins/secrets/initialAdminPassword
+      register: readoutput
+      when: jenkins_passwordfile_to_check.stat.exists
 
     # - name: Get Jenkins Initial Password - Read File
     #   ansible.builtin.shell:
@@ -52,13 +68,42 @@
     #   debug:
     #     msg: "Jenkins Password: {{ readoutput.stdout }}"
 
-    - name: Install UnZip
-      ansible.builtin.yum:
-        name: unzip
-        state: latest
-      
-    - name: Install AWS Cli 2
+    - name: Install pytest
+      ansible.builtin.shell:
+        cmd: pip3 install pytest
+
+    - name: Check if AWS Cli is already installed
+      ansible.builtin.stat:
+        path: "/usr/local/aws-cli/v2/current" #"{{ aws_directory }}"
+      register: dir_to_check
+
+    # - name: Echo dir_to_check
+    #   ansible.builtin.debug:
+    #     msg: "{{ dir_to_check }}"
+
+    - name: Display if the AWS directory was found
+      ansible.builtin.debug:
+        msg: "Directory {{ aws_directory }} present"
+      when: dir_to_check.stat.exists
+    
+    - name: If the AWS directory was not found
+      # ansible.builtin.debug:
+      #   msg: "Directory {{ aws_directory }} not present, installing AWSCLI"
       ansible.builtin.shell: |
         curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
         unzip awscliv2.zip
         sudo ./aws/install
+      when: not dir_to_check.stat.exists
+
+    - name: Install UnZip
+      ansible.builtin.yum:
+        name: unzip
+        state: latest
+    
+    - name: Add jenkins to sudoers for pip
+      lineinfile:
+        path: /etc/sudoers
+        state: present
+        regexp: '^jenkins'
+        line: 'jenkins ALL=(ALL) NOPASSWD: ALL'
+        validate: 'visudo -cf %s'

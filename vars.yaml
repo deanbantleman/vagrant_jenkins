@@ -1,0 +1,2 @@
+aws_directory: "/usr/local/aws-cli/v2/current"
+jenkins_initialAdminPassword_path: "/var/lib/jenkins/secrets/initialAdminPassword"
