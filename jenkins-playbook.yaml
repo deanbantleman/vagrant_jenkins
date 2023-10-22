@@ -51,7 +51,7 @@
         path: "{{ jenkins_initialAdminPassword_path }}"
       register: jenkins_passwordfile_to_check
   
-    - name: Display if the JenkinWS password file was found
+    - name: Display if the Jenkins password file was found
       # ansible.builtin.debug:
       #   msg: "Directory {{ jenkins_initialAdminPassword_path }} present"
       ansible.builtin.shell:
